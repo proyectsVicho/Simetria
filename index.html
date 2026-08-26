@@ -136,7 +136,8 @@ header.scrolled{
 }
 .nav{display:flex; align-items:center; justify-content:space-between; gap:24px;}
 .logo{display:flex; align-items:center; gap:10px; font-family:"Fraunces",serif; font-weight:560; font-size:21px; color:var(--verde-2); letter-spacing:.01em;}
-.logo svg{width:34px; height:34px; flex-shrink:0;}
+.logo img{height:58px; width:auto; max-width:210px; object-fit:contain; display:block;}
+@media(max-width:600px){.logo img{height:46px; max-width:165px;}}
 .nav-links{display:flex; align-items:center; gap:30px; list-style:none; margin:0; padding:0;}
 .nav-links a{font-size:14.5px; font-weight:600; color:var(--carbon); position:relative; padding:4px 0;}
 .nav-links a::after{content:""; position:absolute; left:0; bottom:0; width:0; height:1.5px; background:var(--oro-2); transition:width .35s var(--ease);}
@@ -401,7 +402,7 @@ form.contact-form .actions{display:flex; gap:14px; align-items:center; flex-wrap
 footer{background:var(--carbon); color:rgba(244,241,230,.7); padding:70px 0 26px;}
 .footer-grid{display:grid; grid-template-columns:1.4fr 1fr 1fr 1.1fr; gap:40px; padding-bottom:50px; border-bottom:1px solid rgba(244,241,230,.12);}
 .footer-logo{display:flex; align-items:center; gap:10px; color:var(--hueso); font-family:"Fraunces",serif; font-size:20px; margin-bottom:16px;}
-.footer-logo svg{width:30px; height:30px;}
+.footer-logo img{width:auto; height:74px; max-width:240px; object-fit:contain; display:block; filter:brightness(0) invert(1); opacity:.92;}
 footer p.desc{font-size:13.5px; line-height:1.7; max-width:280px; color:rgba(244,241,230,.55);}
 footer h5{color:var(--hueso); font-size:13px; letter-spacing:.06em; text-transform:uppercase; margin-bottom:18px; font-family:"Manrope",sans-serif; font-weight:700;}
 footer ul{list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:11px;}
@@ -460,9 +461,8 @@ footer ul a:hover{color:var(--oro);}
 <!-- ============ HEADER ============ -->
 <header id="siteHeader">
   <div class="wrap nav">
-    <a href="#top" class="logo">
-      <svg viewBox="0 0 40 40" fill="none"><path d="M4 32C10 14 16 8 20 8C24 8 30 14 36 32" stroke="currentColor" stroke-width="1.6"/><path d="M4 8C10 26 16 32 20 32C24 32 30 26 36 8" stroke="currentColor" stroke-width="1.6" opacity=".45"/></svg>
-      Simetría
+    <a href="#top" class="logo" aria-label="Simetría Dental Studio - Inicio">
+      <img src="logo-simetria.png" alt="Simetría Dental Studio">
     </a>
     <nav>
       <ul class="nav-links">
@@ -897,8 +897,7 @@ footer ul a:hover{color:var(--oro);}
     <div class="footer-grid">
       <div>
         <div class="footer-logo">
-          <svg viewBox="0 0 40 40" fill="none"><path d="M4 32C10 14 16 8 20 8C24 8 30 14 36 32" stroke="currentColor" stroke-width="1.6"/><path d="M4 8C10 26 16 32 20 32C24 32 30 26 36 8" stroke="currentColor" stroke-width="1.6" opacity=".45"/></svg>
-          Simetría Dental Studio
+          <img src="logo-simetria.png" alt="Simetría Dental Studio">
         </div>
         <p class="desc">Clínica dental en Machalí, Región de O'Higgins. Odontología de precisión, estética y bienestar con atención personalizada desde hace más de 9 años.</p>
         <div class="social-row">
@@ -1055,5 +1054,54 @@ document.getElementById('contactForm').addEventListener('submit', function(e){
   this.reset();
 });
 </script>
+\n<!-- ============ CHATBOT SIMETRÍA ============ -->
+<style>
+.sim-chat-launch{position:fixed;right:26px;bottom:98px;z-index:1100;width:58px;height:58px;border:0;border-radius:50%;background:var(--verde-2);color:var(--hueso);box-shadow:0 16px 34px -12px rgba(24,43,36,.55);font-size:25px;cursor:pointer;transition:.3s var(--ease)}
+.sim-chat-launch:hover{transform:translateY(-3px)}
+.sim-chat{position:fixed;right:26px;bottom:168px;z-index:1099;width:390px;max-width:calc(100vw - 30px);height:610px;max-height:calc(100vh - 190px);background:var(--blanco);border:1px solid rgba(34,61,51,.1);border-radius:24px;box-shadow:0 30px 70px -25px rgba(24,43,36,.55);overflow:hidden;display:flex;flex-direction:column;opacity:0;visibility:hidden;transform:translateY(18px) scale(.97);transform-origin:bottom right;transition:.3s var(--ease)}
+.sim-chat.open{opacity:1;visibility:visible;transform:none}.sim-chat-head{background:var(--verde-2);color:var(--hueso);padding:17px 18px;display:flex;align-items:center;justify-content:space-between}.sim-chat-brand{display:flex;align-items:center;gap:11px}.sim-chat-avatar{width:42px;height:42px;border-radius:50%;background:var(--oro);color:var(--verde-2);display:grid;place-items:center;font-family:'Fraunces',serif;font-size:21px;font-weight:560}.sim-chat-brand b{display:block;font-size:14px}.sim-chat-status{font-size:11px;color:rgba(244,241,230,.7);margin-top:2px}.sim-chat-close{border:0;background:rgba(255,255,255,.08);color:var(--hueso);width:34px;height:34px;border-radius:50%;font-size:20px}.sim-chat-msgs{flex:1;overflow-y:auto;padding:17px;background:var(--hueso)}.sim-msg{display:flex;margin-bottom:12px}.sim-msg.user{justify-content:flex-end}.sim-bubble{max-width:84%;padding:11px 13px;border-radius:16px;background:var(--blanco);border:1px solid rgba(34,61,51,.08);font-size:13px;line-height:1.5}.sim-msg.user .sim-bubble{background:var(--verde);color:var(--hueso);border-color:var(--verde);border-bottom-right-radius:5px}.sim-msg.bot .sim-bubble{border-bottom-left-radius:5px}.sim-options{display:flex;flex-direction:column;gap:7px;margin-top:9px}.sim-opt{border:1px solid rgba(34,61,51,.16);background:var(--blanco);color:var(--verde);padding:9px 11px;border-radius:11px;text-align:left;font-size:12px;font-weight:700}.sim-opt:hover{background:var(--hueso-2)}.sim-typing{display:flex;gap:4px;padding:11px 13px;background:var(--blanco);border-radius:16px;width:max-content}.sim-typing i{width:5px;height:5px;background:var(--carbon-40);border-radius:50%;animation:simDot 1s infinite}.sim-typing i:nth-child(2){animation-delay:.15s}.sim-typing i:nth-child(3){animation-delay:.3s}@keyframes simDot{50%{transform:translateY(-4px)}}.sim-chat-quick{display:flex;gap:7px;overflow-x:auto;padding:9px 12px;background:var(--hueso);border-top:1px solid rgba(34,61,51,.07)}.sim-quick{white-space:nowrap;border:1px solid rgba(34,61,51,.16);background:var(--blanco);color:var(--verde);padding:7px 10px;border-radius:100px;font-size:11px;font-weight:700}.sim-chat-input{display:flex;gap:7px;padding:11px;background:var(--blanco);border-top:1px solid rgba(34,61,51,.08)}.sim-chat-input input{flex:1;min-width:0;border:1px solid rgba(34,61,51,.14);background:var(--hueso);border-radius:13px;padding:11px 12px;font:13px 'Manrope',sans-serif;outline:none}.sim-chat-input input:focus{border-color:var(--oro)}.sim-send{width:40px;border:0;border-radius:12px;background:var(--verde);color:var(--hueso);font-size:18px}.sim-wa{display:block;margin-top:9px;background:#25D366;color:#fff!important;text-align:center;padding:10px 12px;border-radius:11px;font-weight:800;font-size:12px}.sim-note{text-align:center;font-size:9px;color:var(--carbon-40);padding:0 10px 8px;background:var(--blanco)}
+@media(max-width:520px){.sim-chat-launch{right:16px;bottom:86px}.sim-chat{right:10px;bottom:154px;width:calc(100vw - 20px);height:min(620px,calc(100vh - 170px));max-height:none}}
+</style>
+<button class="sim-chat-launch" id="simChatLaunch" aria-label="Abrir asistente virtual">💬</button>
+<div class="sim-chat" id="simChat" aria-live="polite">
+  <div class="sim-chat-head"><div class="sim-chat-brand"><div class="sim-chat-avatar">S</div><div><b>Asistente Simetría</b><div class="sim-chat-status">● Asistente virtual · Clínica Simetría</div></div></div><button class="sim-chat-close" id="simChatClose" aria-label="Cerrar">×</button></div>
+  <div class="sim-chat-msgs" id="simChatMsgs"></div>
+  <div class="sim-chat-quick"><button class="sim-quick" data-act="especialidades">Especialidades</button><button class="sim-quick" data-act="agendar">Agendar</button><button class="sim-quick" data-act="ubicacion">Ubicación</button><button class="sim-quick" data-act="horarios">Horarios</button></div>
+  <div class="sim-chat-input"><input id="simChatInput" placeholder="Escribe tu pregunta..." autocomplete="off"><button class="sim-send" id="simChatSend" aria-label="Enviar">➤</button></div>
+  <div class="sim-note">Información orientativa. Para diagnóstico o urgencias, contacta directamente a la clínica.</div>
+</div>
+<script>
+(()=>{
+const C={whatsapp:'56956304143',telefono:'+56 9 5630 4143',direccion:'Avenida Madero 443, Machalí, O’Higgins',mapa:'https://maps.google.com/?cid=8655380949232711845',instagram:'https://www.instagram.com/simetria.dentalstudio/'};
+const chat=document.getElementById('simChat'),launch=document.getElementById('simChatLaunch'),close=document.getElementById('simChatClose'),msgs=document.getElementById('simChatMsgs'),inp=document.getElementById('simChatInput'),send=document.getElementById('simChatSend');let started=false;
+const esc=t=>{const d=document.createElement('div');d.textContent=t;return d.innerHTML};const wa=t=>`https://wa.me/${C.whatsapp}?text=${encodeURIComponent(t)}`;const scroll=()=>setTimeout(()=>msgs.scrollTop=msgs.scrollHeight,20);
+function add(text,type='bot',buttons=[]){const m=document.createElement('div');m.className='sim-msg '+type;const b=document.createElement('div');b.className='sim-bubble';b.innerHTML=text;if(buttons.length){const o=document.createElement('div');o.className='sim-options';buttons.forEach(x=>{const bt=document.createElement('button');bt.className='sim-opt';bt.textContent=x.text;bt.onclick=()=>{add(x.text,'user');typing(()=>action(x.action))};o.appendChild(bt)});b.appendChild(o)}m.appendChild(b);msgs.appendChild(m);scroll()}
+function typing(cb){const m=document.createElement('div');m.className='sim-msg bot';m.innerHTML='<div class="sim-typing"><i></i><i></i><i></i></div>';msgs.appendChild(m);scroll();setTimeout(()=>{m.remove();cb()},520)}
+const wabtn=t=>`<a class="sim-wa" href="${wa(t)}" target="_blank" rel="noopener">Hablar por WhatsApp</a>`;
+function welcome(){add('¡Hola! 👋<br><br>Soy el asistente virtual de <strong>Clínica Simetría Dental Studio</strong>. Puedo orientarte sobre tratamientos, horarios, ubicación y agendamiento.','bot',[{text:'🦷 Ver especialidades',action:'especialidades'},{text:'📅 Agendar evaluación',action:'agendar'},{text:'💰 Consultar valores',action:'precios'},{text:'📍 Cómo llegar',action:'ubicacion'}])}
+function action(a){const B=(text,buttons=[])=>add(text,'bot',buttons);switch(a){
+case'especialidades':B('Contamos con distintas áreas de atención. ¿Sobre cuál quieres saber más?',[{text:'Odontología General',action:'general'},{text:'Estética Dental',action:'estetica'},{text:'Ortodoncia y Ortopedia',action:'ortodoncia'},{text:'Implantología',action:'implantes'},{text:'Cirugía Oral',action:'cirugia'},{text:'Rehabilitación Oral',action:'rehabilitacion'},{text:'Endodoncia',action:'endodoncia'},{text:'ATM y Bruxismo',action:'atm'},{text:'Estética Facial',action:'facial'},{text:'Bienestar Integral',action:'bienestar'}]);break;
+case'general':B('<strong>Odontología General</strong><br>Prevención, controles y cuidado bucal integral para toda la familia.'+wabtn('Hola, quisiera consultar por Odontología General.'));break;
+case'estetica':B('<strong>Estética Dental</strong><br>Alternativas como carillas, blanqueamiento y diseño de sonrisa. La indicación depende de una evaluación profesional.'+wabtn('Hola, quisiera consultar por Estética Dental.'));break;
+case'ortodoncia':B('<strong>Ortodoncia y Ortopedia</strong><br>Opciones para alinear dientes y mejorar la mordida, incluyendo brackets y alineadores según evaluación.'+wabtn('Hola, quisiera consultar por Ortodoncia.'));break;
+case'implantes':B('<strong>Implantología</strong><br>Tratamientos orientados a recuperar piezas dentales perdidas. La indicación requiere evaluación clínica.'+wabtn('Hola, quisiera consultar por Implantología.'));break;
+case'cirugia':B('<strong>Cirugía Oral</strong><br>Evaluación y procedimientos quirúrgicos odontológicos según cada caso.'+wabtn('Hola, quisiera consultar por Cirugía Oral.'));break;
+case'rehabilitacion':B('<strong>Rehabilitación Oral</strong><br>Tratamientos para recuperar función y estética mediante coronas, prótesis u otras alternativas según evaluación.'+wabtn('Hola, quisiera consultar por Rehabilitación Oral.'));break;
+case'endodoncia':B('<strong>Endodoncia</strong><br>Tratamiento orientado a conservar piezas dentales cuando existe compromiso de la pulpa o raíz.'+wabtn('Hola, quisiera consultar por Endodoncia.'));break;
+case'atm':B('<strong>ATM y Bruxismo</strong><br>Evaluación de molestias mandibulares, apretamiento y rechinamiento dental para definir el tratamiento adecuado.'+wabtn('Hola, quisiera consultar por ATM y Bruxismo.'));break;
+case'facial':B('<strong>Estética Facial</strong><br>Procedimientos estéticos faciales disponibles en la clínica. Cada indicación debe definirse de forma personalizada.'+wabtn('Hola, quisiera consultar por Estética Facial.'));break;
+case'bienestar':B('<strong>Bienestar Integral</strong><br>La clínica también presenta terapias complementarias dentro de su propuesta de atención.'+wabtn('Hola, quisiera consultar por Bienestar Integral.'));break;
+case'agendar':B('¡Claro! 😊 Puedes solicitar una hora directamente con Clínica Simetría por WhatsApp. El equipo te confirmará la disponibilidad.'+wabtn('Hola, quisiera agendar una evaluación en Clínica Simetría Dental Studio.'));break;
+case'precios':B('<strong>Valores y presupuestos</strong><br>El valor depende del tratamiento y de las necesidades de cada paciente. Para recibir información precisa, consulta con la clínica o agenda una evaluación.'+wabtn('Hola, quisiera consultar valores y disponibilidad en Clínica Simetría.'));break;
+case'ubicacion':B(`<strong>📍 Ubicación</strong><br>${C.direccion}.<br><br><a class="sim-wa" style="background:var(--verde)" href="${C.mapa}" target="_blank" rel="noopener">Abrir en Google Maps</a>`);break;
+case'horarios':B('<strong>🕐 Horarios de atención</strong><br><br><strong>Lunes a miércoles:</strong> 9:30 – 18:30<br><strong>Jueves y viernes:</strong> 9:00 – 19:00<br><strong>Sábado:</strong> 9:00 – 12:00<br><strong>Domingo:</strong> Cerrado<br><br>Para confirmar disponibilidad, escríbenos por WhatsApp.'+wabtn('Hola, quisiera consultar disponibilidad de horas.'));break;
+case'contacto':B(`<strong>Contacto</strong><br>Teléfono / WhatsApp: ${C.telefono}<br>Dirección: ${C.direccion}.`+wabtn('Hola, quisiera hacer una consulta a Clínica Simetría.'));break;
+case'instagram':B(`<strong>Instagram</strong><br><a href="${C.instagram}" target="_blank" rel="noopener">@simetria.dentalstudio</a>`);break;
+default:welcome()}}
+function intent(t){t=t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');if(/agendar|agenda|reservar|reserva|hora|cita/.test(t))return'agendar';if(/precio|valor|cuanto cuesta|cuanto sale|costo|presupuesto/.test(t))return'precios';if(/ortodon|frenillo|bracket|alineador|alinear/.test(t))return'ortodoncia';if(/blanque|carilla|sonrisa|estetica dental/.test(t))return'estetica';if(/implante/.test(t))return'implantes';if(/cirugia|extraccion/.test(t))return'cirugia';if(/rehabilit|protesis|corona/.test(t))return'rehabilitacion';if(/endodon|conducto/.test(t))return'endodoncia';if(/brux|atm|mandib/.test(t))return'atm';if(/facial|botox|vitamina/.test(t))return'facial';if(/acupunt|bienestar/.test(t))return'bienestar';if(/direccion|ubicacion|donde estan|como llego|llegar/.test(t))return'ubicacion';if(/horario|abren|cierran|atienden/.test(t))return'horarios';if(/telefono|contacto|whatsapp|hablar con/.test(t))return'contacto';if(/instagram|redes/.test(t))return'instagram';if(/especialidad|tratamiento|servicio|que hacen/.test(t))return'especialidades';if(/hola|buenas|buenos dias|buenas tardes|buenas noches/.test(t))return'inicio';return null}
+function submit(){const t=inp.value.trim();if(!t)return;add(esc(t),'user');inp.value='';const a=intent(t);typing(()=>a?action(a):add('Puedo ayudarte con tratamientos, valores, horarios, ubicación o agendamiento. Si tu consulta es específica sobre tu salud, lo mejor es hablar directamente con el equipo clínico.','bot',[{text:'Ver especialidades',action:'especialidades'},{text:'Agendar evaluación',action:'agendar'},{text:'Hablar con la clínica',action:'contacto'}]))}
+function open(){chat.classList.add('open');if(!started){started=true;welcome()}setTimeout(()=>inp.focus(),250)}launch.onclick=()=>chat.classList.contains('open')?chat.classList.remove('open'):open();close.onclick=()=>chat.classList.remove('open');send.onclick=submit;inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();submit()}});document.querySelectorAll('.sim-quick').forEach(b=>b.onclick=()=>{open();add(b.textContent,'user');typing(()=>action(b.dataset.act))});
+})();
+</script>\n
 </body>
 </html>
