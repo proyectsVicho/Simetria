@@ -1,0 +1,54 @@
+name: Fix specialty pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/fix-specialty-pages.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Fix specialty pages layout and logo
+        shell: python
+        run: |
+          from pathlib import Path
+
+          folders = [
+              'odontologia-general','estetica-dental','ortodoncia-y-ortopedia',
+              'implantologia','cirugia-oral','rehabilitacion-oral','endodoncia',
+              'atm-y-bruxismo','estetica-facial','bienestar-integral','especialidades'
+          ]
+
+          old_brand = '<a class="brand" href="../index.html">SIMETRÍA DENTAL STUDIO</a>'
+          new_brand = '<a class="brand" href="../index.html" aria-label="Simetría Dental Studio - Inicio"><img src="../img/Copia de Diseño sin título.png" alt="Simetría Dental Studio"></a>'
+
+          for folder in folders:
+              p = Path(folder) / 'index.html'
+              text = p.read_text(encoding='utf-8')
+              if old_brand in text:
+                  text = text.replace(old_brand, new_brand)
+
+              # Make breadcrumb Especialidades clickable on treatment pages.
+              text = text.replace('>Inicio</a> · Especialidades · ', '>Inicio</a> · <a href="../especialidades/">Especialidades</a> · ')
+
+              # Keep the top navigation consistent and useful.
+              text = text.replace('<a href="../index.html#especialidades">Especialidades</a>', '<a href="../especialidades/">Especialidades</a>')
+
+              p.write_text(text, encoding='utf-8')
+
+      - name: Commit fixes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add odontologia-general estetica-dental ortodoncia-y-ortopedia implantologia cirugia-oral rehabilitacion-oral endodoncia atm-y-bruxismo estetica-facial bienestar-integral especialidades
+          git diff --cached --quiet && exit 0
+          git commit -m "Fix specialty pages mobile header and logo"
+          git push origin main
