@@ -1,0 +1,59 @@
+name: Link specialty pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/link-specialties.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update-links:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Update specialty links in index
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          p = Path('index.html')
+          text = p.read_text(encoding='utf-8')
+
+          # Make Especialidades in navigation/menu open the specialty hub.
+          text = text.replace('<a href="#especialidades">Especialidades</a>', '<a href="/especialidades/">Especialidades</a>')
+
+          routes = {
+              'Odontología General': '/odontologia-general/',
+              'Estética Dental': '/estetica-dental/',
+              'Ortodoncia y Ortopedia': '/ortodoncia-y-ortopedia/',
+              'Implantología': '/implantologia/',
+              'Cirugía Oral': '/cirugia-oral/',
+              'Rehabilitación Oral': '/rehabilitacion-oral/',
+              'Endodoncia': '/endodoncia/',
+              'ATM y Bruxismo': '/atm-y-bruxismo/',
+              'Estética Facial': '/estetica-facial/',
+              'Bienestar Integral': '/bienestar-integral/',
+          }
+
+          for title, route in routes.items():
+              pattern = rf'(<h3>{re.escape(title)}</h3>.*?<a href=")#contacto("[^>]*>Conocer más)'
+              text, count = re.subn(pattern, rf'\1{route}\2', text, count=1, flags=re.S)
+              if count != 1:
+                  raise SystemExit(f'No pude actualizar el enlace de: {title}')
+
+          p.write_text(text, encoding='utf-8')
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Link specialty cards and menu"
+          git push origin main
