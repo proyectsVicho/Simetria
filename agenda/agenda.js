@@ -1,73 +1,172 @@
 const KEY='simetria_demo_citas';
-const SESSION_KEY='simetria_demo_doctor';
-const doctores=['Dr. Martínez','Dr. Pérez','Dr. Pepito'];
+
+const DOCTORES={
+  martinez:{id:'martinez',nombre:'Dr. Martínez'},
+  perez:{id:'perez',nombre:'Dr. Pérez'},
+  pepito:{id:'pepito',nombre:'Dr. Pepito'}
+};
+
 const especialidades=['Odontología General','Estética Dental','Ortodoncia','Implantología','Cirugía Oral','Rehabilitación Oral','Endodoncia','ATM y Bruxismo','Estética Facial'];
 const horas=['09:30','10:00','10:30','11:00','11:30','12:00','15:00','15:30','16:00','16:30','17:00','17:30'];
 
-function citas(){return JSON.parse(localStorage.getItem(KEY)||'[]')}
+function citas(){
+  try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch{return []}
+}
 function guardar(x){localStorage.setItem(KEY,JSON.stringify(x))}
-function poblar(id,arr){const e=document.getElementById(id);if(e)e.innerHTML='<option value="">Seleccionar…</option>'+arr.map(x=>`<option>${x}</option>`).join('')}
+function doctorPorId(id){return DOCTORES[id]||null}
+function idDoctorDeCita(c){
+  if(c.doctorId&&DOCTORES[c.doctorId])return c.doctorId;
+  const encontrado=Object.values(DOCTORES).find(d=>d.nombre===c.doctor);
+  return encontrado?encontrado.id:'';
+}
+function escapar(v=''){
+  return String(v).replace(/[&<>'"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));
+}
 
 function iniciarReserva(){
-  poblar('especialidad',especialidades);
-  poblar('doctor',doctores);
-  const f=document.getElementById('fecha');
-  if(f){const hoy=new Date();hoy.setDate(hoy.getDate()+1);f.min=hoy.toISOString().slice(0,10);f.value=f.min}
+  const especialidad=document.getElementById('especialidad');
+  const doctor=document.getElementById('doctor');
+  const fecha=document.getElementById('fecha');
+  const form=document.getElementById('reserva');
+
+  if(especialidad && especialidad.options.length<=1){
+    especialidades.forEach(e=>especialidad.add(new Option(e,e)));
+  }
+
+  if(fecha){
+    const hoy=new Date();
+    hoy.setDate(hoy.getDate()+1);
+    fecha.min=hoy.toISOString().slice(0,10);
+    if(!fecha.value)fecha.value=fecha.min;
+  }
+
   renderHoras();
-  ['doctor','fecha'].forEach(id=>document.getElementById(id)?.addEventListener('change',renderHoras));
-  document.getElementById('reserva')?.addEventListener('submit',e=>{
+  doctor?.addEventListener('change',renderHoras);
+  fecha?.addEventListener('change',renderHoras);
+
+  form?.addEventListener('submit',e=>{
     e.preventDefault();
     const slot=document.querySelector('.slot.selected');
-    if(!slot)return alert('Selecciona una hora.');
-    const data={id:Date.now(),especialidad:especialidad.value,doctor:doctor.value,fecha:fecha.value,hora:slot.dataset.hora,nombre:nombre.value,telefono:telefono.value,email:email.value,estado:'Pendiente'};
-    if(!data.especialidad||!data.doctor||!data.nombre||!data.telefono)return alert('Completa los campos obligatorios.');
+    const nombre=document.getElementById('nombre').value.trim();
+    const telefono=document.getElementById('telefono').value.trim();
+    const email=document.getElementById('email').value.trim();
+    const doctorId=doctor.value;
+    const doc=doctorPorId(doctorId);
+
+    if(!especialidad.value||!doc||!fecha.value||!nombre||!telefono){
+      alert('Completa especialidad, doctor, fecha, nombre y teléfono.');return;
+    }
+    if(!slot){alert('Selecciona una hora disponible.');return;}
+
+    const data={
+      id:Date.now(),
+      creadoEn:new Date().toISOString(),
+      especialidad:especialidad.value,
+      doctorId:doc.id,
+      doctor:doc.nombre,
+      fecha:fecha.value,
+      hora:slot.dataset.hora,
+      nombre,
+      telefono,
+      email,
+      estado:'Pendiente'
+    };
+
     const x=citas();
-    if(x.some(c=>c.doctor===data.doctor&&c.fecha===data.fecha&&c.hora===data.hora))return alert('Esa hora ya fue reservada para este profesional.');
-    x.push(data);guardar(x);
-    document.getElementById('resultado').innerHTML=`<div class="notice"><b>Demo:</b> reserva creada con <b>${data.doctor}</b> para ${data.nombre}, ${data.fecha} a las ${data.hora}. La cita aparecerá únicamente en el panel de ese doctor.</div>`;
+    const ocupada=x.some(c=>idDoctorDeCita(c)===doctorId&&c.fecha===data.fecha&&c.hora===data.hora&&c.estado!=='Cancelada');
+    if(ocupada){alert('Esa hora acaba de ocuparse con este doctor. Elige otra.');renderHoras();return;}
+
+    x.push(data);
+    guardar(x);
+    document.getElementById('resultado').innerHTML=`<div class="notice"><b>Hora registrada.</b> ${escapar(nombre)} reservó con <b>${escapar(doc.nombre)}</b> el ${escapar(data.fecha)} a las <b>${escapar(data.hora)}</b>. Ya aparece en la central de ${escapar(doc.nombre)}.</div>`;
+    form.reset();
+    especialidad.value='';
+    doctor.value=doctorId;
+    fecha.value=data.fecha;
     renderHoras();
   });
 }
 
 function renderHoras(){
-  const box=document.getElementById('horas');if(!box)return;
-  const d=document.getElementById('doctor')?.value,f=document.getElementById('fecha')?.value;
-  const ocupadas=citas().filter(c=>c.doctor===d&&c.fecha===f&&c.estado!=='Cancelada').map(c=>c.hora);
+  const box=document.getElementById('horas');
+  if(!box)return;
+  const doctorId=document.getElementById('doctor')?.value||'';
+  const fecha=document.getElementById('fecha')?.value||'';
+
+  if(!doctorId||!fecha){
+    box.innerHTML='<p class="small">Primero selecciona un doctor y una fecha.</p>';
+    return;
+  }
+
+  const ocupadas=citas()
+    .filter(c=>idDoctorDeCita(c)===doctorId&&c.fecha===fecha&&c.estado!=='Cancelada')
+    .map(c=>c.hora);
+
   box.innerHTML=horas.map(h=>`<button type="button" class="slot" data-hora="${h}" ${ocupadas.includes(h)?'disabled':''}>${ocupadas.includes(h)?'Ocupada':h}</button>`).join('');
-  box.querySelectorAll('.slot:not(:disabled)').forEach(b=>b.onclick=()=>{box.querySelectorAll('.slot').forEach(x=>x.classList.remove('selected'));b.classList.add('selected')});
+  box.querySelectorAll('.slot:not(:disabled)').forEach(b=>b.addEventListener('click',()=>{
+    box.querySelectorAll('.slot').forEach(x=>x.classList.remove('selected'));
+    b.classList.add('selected');
+  }));
 }
 
-function seleccionarDoctor(nombre){
-  sessionStorage.setItem(SESSION_KEY,nombre);
-  window.location.href='panel.html';
+function doctorActualId(){
+  const params=new URLSearchParams(location.search);
+  const id=params.get('doctor')||'';
+  return DOCTORES[id]?id:'';
 }
-
-function doctorActual(){return sessionStorage.getItem(SESSION_KEY)||''}
 
 function renderPanel(){
-  const doctor=doctorActual();
-  if(!doctor||!doctores.includes(doctor)){window.location.href='doctor.html';return}
-  const t=document.getElementById('doctorName');if(t)t.textContent=doctor;
+  const doctorId=doctorActualId();
+  const doc=doctorPorId(doctorId);
+  if(!doc){location.href='doctor.html';return;}
+
+  document.getElementById('doctorName').textContent=doc.nombre;
+  document.title=`Central de ${doc.nombre} — Simetría`;
   tabla();
+
+  window.addEventListener('storage',ev=>{
+    if(ev.key===KEY)tabla();
+  });
 }
 
 function tabla(){
-  const body=document.getElementById('citasBody');if(!body)return;
-  const doctor=doctorActual();
-  const x=citas().filter(c=>c.doctor===doctor).sort((a,b)=>(a.fecha+a.hora).localeCompare(b.fecha+b.hora));
-  body.innerHTML=x.length?x.map(c=>`<tr><td>${c.fecha}<br><b>${c.hora}</b></td><td>${c.nombre}<br><span class="small">${c.telefono}${c.email?'<br>'+c.email:''}</span></td><td>${c.especialidad}</td><td><select onchange="estado(${c.id},this.value)"><option ${c.estado==='Pendiente'?'selected':''}>Pendiente</option><option ${c.estado==='Confirmada'?'selected':''}>Confirmada</option><option ${c.estado==='Atendida'?'selected':''}>Atendida</option><option ${c.estado==='Cancelada'?'selected':''}>Cancelada</option></select></td><td><button class="btn ghost" onclick="eliminar(${c.id})">Eliminar</button></td></tr>`).join(''):'<tr><td colspan="5">Todavía no hay reservas para este doctor.</td></tr>';
+  const body=document.getElementById('citasBody');
+  if(!body)return;
+  const doctorId=doctorActualId();
+  const x=citas()
+    .filter(c=>idDoctorDeCita(c)===doctorId)
+    .sort((a,b)=>(a.fecha+a.hora).localeCompare(b.fecha+b.hora));
+
+  const contador=document.getElementById('totalCitas');
+  if(contador)contador.textContent=String(x.filter(c=>c.estado!=='Cancelada').length);
+
+  body.innerHTML=x.length?x.map(c=>`<tr>
+    <td>${escapar(c.fecha)}<br><b>${escapar(c.hora)}</b></td>
+    <td><b>${escapar(c.nombre)}</b><br><span class="small">${escapar(c.telefono)}${c.email?'<br>'+escapar(c.email):''}</span></td>
+    <td>${escapar(c.especialidad)}</td>
+    <td><select onchange="estado(${Number(c.id)},this.value)">
+      <option ${c.estado==='Pendiente'?'selected':''}>Pendiente</option>
+      <option ${c.estado==='Confirmada'?'selected':''}>Confirmada</option>
+      <option ${c.estado==='Atendida'?'selected':''}>Atendida</option>
+      <option ${c.estado==='Cancelada'?'selected':''}>Cancelada</option>
+    </select></td>
+    <td><button class="btn ghost" onclick="eliminar(${Number(c.id)})">Eliminar</button></td>
+  </tr>`).join(''):`<tr><td colspan="5"><b>No hay horas registradas todavía.</b><br><span class="small">Cuando un paciente seleccione este doctor en el formulario, la cita aparecerá aquí.</span></td></tr>`;
 }
 
 function estado(id,v){
-  const doctor=doctorActual(),x=citas();
-  const c=x.find(c=>c.id===id&&c.doctor===doctor);
+  const doctorId=doctorActualId();
+  const x=citas();
+  const c=x.find(c=>Number(c.id)===Number(id)&&idDoctorDeCita(c)===doctorId);
   if(c)c.estado=v;
-  guardar(x);tabla();
+  guardar(x);
+  tabla();
 }
 
 function eliminar(id){
-  const doctor=doctorActual();
-  if(confirm('¿Eliminar esta reserva demo?')){guardar(citas().filter(c=>!(c.id===id&&c.doctor===doctor)));tabla()}
+  const doctorId=doctorActualId();
+  if(confirm('¿Eliminar esta reserva demo?')){
+    guardar(citas().filter(c=>!(Number(c.id)===Number(id)&&idDoctorDeCita(c)===doctorId)));
+    tabla();
+  }
 }
-
-function cerrarSesion(){sessionStorage.removeItem(SESSION_KEY);window.location.href='doctor.html'}
