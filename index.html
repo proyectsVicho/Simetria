@@ -37,25 +37,18 @@
 <style>
 /* ============ TOKENS ============ */
 :root{
-  /* Base: azul clínico suave + piedra + detalles dorados */
-  --hueso:#E5EDF0;       /* Fondo principal azul muy suave */
-  --hueso-2:#D9E4E8;     /* Fondo secundario */
-  --piedra:#D4D2CC;      /* Header gris piedra */
-  --piedra-2:#C9C7C1;    /* Header al hacer scroll */
-
-  --verde:#344C5D;       /* Azul Simetría */
-  --verde-2:#243744;     /* Azul profundo */
-  --salvia:#AEBBC2;      /* Azul gris claro */
-
-  --oro:#C7A667;         /* Dorado principal */
-  --oro-2:#A88749;       /* Dorado oscuro para contraste */
-
-  --carbon:#22313A;      /* Texto principal */
-  --carbon-60:rgba(34,49,58,.72);
-  --carbon-40:rgba(34,49,58,.52);
-  --niebla:#D7E1E6;
-  --blanco:#F3F6F5;
-
+  --hueso:#CEC8B7;      /* beige piedra exacto de la web original */
+  --hueso-2:#D9D4C5;    /* piedra claro para secciones alternas */
+  --verde:#334149;      /* azul gris exacto del hero original */
+  --verde-2:#28353D;    /* azul gris profundo */
+  --salvia:#9EA8A6;
+  --oro:#C7A667;        /* detalle oro */
+  --oro-2:#B08F52;
+  --carbon:#26343D;
+  --carbon-60:rgba(38,52,61,.72);
+  --carbon-40:rgba(38,52,61,.5);
+  --niebla:#E3DED1;
+  --blanco:#F7F4EC;
   --radius-s:10px;
   --radius-m:18px;
   --radius-l:28px;
@@ -131,17 +124,18 @@ section{position:relative;}
 /* ============ HEADER ============ */
 header{
   position:fixed; top:0; left:0; right:0; z-index:1000;
-  background:rgba(196,198,195,.72);
-  backdrop-filter:blur(14px) saturate(120%);
+  background:rgba(206,200,183,.82);
+  backdrop-filter:blur(14px) saturate(115%);
+  -webkit-backdrop-filter:blur(14px) saturate(115%);
   transition:background .5s var(--ease), box-shadow .5s var(--ease), padding .4s var(--ease);
-  padding:13px 0;
-  box-shadow:0 1px 0 rgba(36,55,68,.08);
+  padding:14px 0;
 }
 header.scrolled{
-  background:rgba(190,193,191,.82);
-  backdrop-filter:blur(14px) saturate(120%);
-  box-shadow:0 5px 22px rgba(36,55,68,.10);
-  padding:9px 0;
+  background:rgba(206,200,183,.94);
+  backdrop-filter:blur(16px) saturate(120%);
+  -webkit-backdrop-filter:blur(16px) saturate(120%);
+  box-shadow:0 1px 0 rgba(40,53,61,.14);
+  padding:10px 0;
 }
 .nav{display:flex; align-items:center; justify-content:space-between; gap:24px;}
 .logo{display:flex; align-items:center; gap:10px; font-family:"Fraunces",serif; font-weight:560; font-size:21px; color:var(--verde-2); letter-spacing:.01em;}
@@ -170,24 +164,29 @@ header.scrolled{
 /* ============ HERO ============ */
 .hero{
   min-height:auto;
-  display:flex;
-  align-items:center;
-  padding:108px 0 46px;
+  display:flex; align-items:center;
+  padding:118px 0 52px;
   background:
-    radial-gradient(ellipse 760px 420px at 88% 8%, rgba(199,166,103,.13), transparent 60%),
-    radial-gradient(ellipse 700px 420px at 8% 88%, rgba(52,76,93,.09), transparent 65%),
-    linear-gradient(180deg, rgba(238,243,244,.72) 0%, rgba(221,232,236,.76) 100%);
-  backdrop-filter:blur(2px);
-  position:relative;
-  overflow:hidden;
+    radial-gradient(ellipse 800px 440px at 80% 12%, rgba(255,255,255,.045), transparent 62%),
+    linear-gradient(180deg, rgba(51,65,73,.98) 0%, rgba(51,65,73,.98) 100%);
+  position:relative; overflow:hidden;
 }
+.hero::before{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background:linear-gradient(110deg, rgba(255,255,255,.13), transparent 42%, rgba(255,255,255,.05));
+}
+.hero > .container{position:relative; z-index:1;}
+.hero h1{color:#F8FAFB;}
+.hero p.lead{color:rgba(248,250,251,.84);}
+.hero .hero-trustrow .item{color:rgba(248,250,251,.92);}
+.hero .eyebrow{color:#F1D59A;}
 .hero-grid{display:grid; grid-template-columns:1.08fr .92fr; gap:42px; align-items:center;}
 .hero-eyebrow{margin-bottom:14px;}
-.hero h1{font-size:clamp(38px,5vw,62px); line-height:1.03; margin-bottom:16px;}
-.hero p.lead{font-size:17px; color:var(--carbon-60); max-width:500px; margin-bottom:22px; line-height:1.58;}
+.hero h1{font-size:clamp(38px,5vw,62px); line-height:1.03; margin-bottom:16px; color:#F8FAFB;}
+.hero p.lead{font-size:17px; color:rgba(248,250,251,.84); max-width:500px; margin-bottom:22px; line-height:1.58;}
 .hero-actions{display:flex; gap:12px; flex-wrap:wrap; margin-bottom:24px;}
 .hero-trustrow{display:flex; gap:18px; flex-wrap:wrap;}
-.hero-trustrow .item{display:flex; align-items:center; gap:9px; font-size:13.5px; font-weight:700; color:var(--verde-2);}
+.hero-trustrow .item{display:flex; align-items:center; gap:9px; font-size:13.5px; font-weight:700; color:rgba(248,250,251,.92);}
 .hero-trustrow svg{width:17px; height:17px; color:var(--oro-2);}
 .hero-visual{
   position:relative; aspect-ratio:4/4.35; max-height:520px; border-radius:var(--radius-l);
@@ -498,6 +497,46 @@ footer p.desc,footer ul a{color:rgba(255,255,255,.72);}
 }
 
 </style>
+<style id="simetria-original-overrides">
+.hero .eyebrow{color:var(--oro);}
+.hero h1{color:#F2EEE4;}
+.hero p.lead{color:rgba(242,238,228,.76);}
+.hero .hero-trustrow .item{color:#F2EEE4;}
+.hero .btn-primary{background:var(--oro);color:var(--verde-2);}
+.hero .btn-outline{border-color:rgba(242,238,228,.55);color:#F2EEE4;}
+.hero .btn-outline:hover{background:rgba(242,238,228,.10);border-color:#F2EEE4;}
+
+/* Carrusel de portada */
+.hero-visual{background:#27353d; padding:0; position:relative;}
+.hero-slider-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .65s ease;}
+.hero-slider-img.active{opacity:1;}
+.hero-slider-overlay{position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(24,35,42,.28));pointer-events:none;}
+.hero-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:4;width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.6);background:rgba(51,65,73,.38);color:white;font-size:24px;display:grid;place-items:center;backdrop-filter:blur(6px);}
+.hero-arrow:hover{background:rgba(51,65,73,.68);}
+.hero-arrow.prev{left:14px}.hero-arrow.next{right:14px}
+.hero-dots{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);z-index:5;display:flex;gap:8px;}
+.hero-dot{width:8px;height:8px;border-radius:50%;border:0;background:rgba(255,255,255,.48);padding:0;}
+.hero-dot.active{background:var(--oro);transform:scale(1.25);}
+
+/* Especialidades con fotografías */
+.spec-card{padding:0;overflow:hidden;background:var(--blanco);}
+.spec-photo{height:178px;overflow:hidden;background:#c3c6c3;}
+.spec-photo img{width:100%;height:100%;object-fit:cover;transition:transform .55s var(--ease);}
+.spec-card:hover .spec-photo img{transform:scale(1.045);}
+.spec-content{padding:24px 24px 26px;}
+.spec-card p{min-height:44px;}
+
+/* Fondo general piedra de la web original */
+body{background:var(--hueso);}
+section.pad{background:transparent;}
+.spec-card,.test-card,.tech-card,.loc-info,.ba-card{background:var(--blanco);}
+
+@media(max-width:600px){
+ .hero{padding:102px 0 38px;}
+ .hero-arrow{width:36px;height:36px;font-size:20px;}
+ .spec-photo{height:160px;}
+}
+</style>
 </head>
 <body>
 
@@ -566,17 +605,28 @@ footer p.desc,footer ul a{color:rgba(255,255,255,.72);}
       </div>
     </div>
     <div class="reveal in" style="transition-delay:.15s">
-      <div class="hero-visual">
-        <div class="arc-motif" style="color:var(--hueso);"><svg viewBox="0 0 400 200" preserveAspectRatio="none" style="width:100%;height:100%"><use href="#arc-symmetry"/></svg></div>
-        <p class="photo-note">📷 Espacio para fotografía profesional — sonrisa / equipo clínico de Simetría Dental Studio</p>
-        <div class="hero-badge">
-          <div class="num">10</div>
-          <div class="lbl">Especialidades odontológicas y estéticas en un solo lugar</div>
+      <div class="hero-visual" id="heroSlider" aria-label="Galería principal de Simetría Dental Studio">
+          <img class="hero-slider-img active" src="a1.jpg" alt="Simetría Dental Studio - imagen principal 1">
+          <img class="hero-slider-img" src="a2.jpg" alt="Simetría Dental Studio - imagen principal 2">
+          <img class="hero-slider-img" src="a3.jpg" alt="Simetría Dental Studio - imagen principal 3">
+          <img class="hero-slider-img" src="a4.jpg" alt="Simetría Dental Studio - imagen principal 4">
+          <div class="hero-slider-overlay"></div>
+          <button class="hero-arrow prev" id="heroPrev" type="button" aria-label="Imagen anterior">‹</button>
+          <button class="hero-arrow next" id="heroNext" type="button" aria-label="Imagen siguiente">›</button>
+          <div class="hero-dots" id="heroDots" aria-label="Seleccionar imagen">
+            <button class="hero-dot active" type="button" data-slide="0" aria-label="Imagen 1"></button>
+            <button class="hero-dot" type="button" data-slide="1" aria-label="Imagen 2"></button>
+            <button class="hero-dot" type="button" data-slide="2" aria-label="Imagen 3"></button>
+            <button class="hero-dot" type="button" data-slide="3" aria-label="Imagen 4"></button>
+          </div>
+          <div class="hero-badge">
+            <div class="num">10</div>
+            <div class="lbl">Especialidades odontológicas y estéticas en un solo lugar</div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
 <!-- ============ TRUST BAR ============ -->
 <div class="trustbar">
@@ -598,45 +648,65 @@ footer p.desc,footer ul a{color:rgba(255,255,255,.72);}
     </div>
     <div class="spec-grid reveal">
       <!-- 10 specialty cards -->
-      <div class="spec-card"><div class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.5-9.5-9C1 8 3 4 7 4c2 0 4 1.3 5 3 1-1.7 3-3 5-3 4 0 6 4 4.5 8-2.5 4.5-9.5 9-9.5 9z"/></svg></div>
-        <h3>Odontología General</h3><p>Prevención y cuidado bucal para toda la familia.</p>
+      <div class="spec-card">
+  <div class="spec-photo"><img src="esp1.jpg" alt="Odontología General — Simetría Dental Studio" loading="lazy"></div>
+  <div class="spec-content"><h3>Odontología General</h3><p>Prevención y cuidado bucal para toda la familia.</p>
         <a href="#contacto">Conocer más <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+</div>
 
-      <div class="spec-card"><div class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 14c0-5 3-9 8-9s8 4 8 9-3 6-8 6-8-1-8-6z"/></svg></div>
-        <h3>Estética Dental</h3><p>Carillas y blanqueamiento para una sonrisa perfecta.</p>
+      <div class="spec-card">
+  <div class="spec-photo"><img src="esp2.jpg" alt="Estética Dental — Simetría Dental Studio" loading="lazy"></div>
+  <div class="spec-content"><h3>Estética Dental</h3><p>Carillas y blanqueamiento para una sonrisa perfecta.</p>
         <a href="#contacto">Conocer más <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+</div>
 
-      <div class="spec-card"><div class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h16M4 18h10"/></svg></div>
-        <h3>Ortodoncia y Ortopedia</h3><p>Dientes alineados con brackets o alineadores invisibles.</p>
+      <div class="spec-card">
+  <div class="spec-photo"><img src="esp3.jpg" alt="Ortodoncia y Ortopedia — Simetría Dental Studio" loading="lazy"></div>
+  <div class="spec-content"><h3>Ortodoncia y Ortopedia</h3><p>Dientes alineados con brackets o alineadores invisibles.</p>
         <a href="#contacto">Conocer más <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+</div>
 
-      <div class="spec-card"><div class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v13M12 15l-3 7M12 15l3 7"/></svg></div>
-        <h3>Implantología</h3><p>Recupera piezas perdidas con implantes permanentes.</p>
+      <div class="spec-card">
+  <div class="spec-photo"><img src="esp4.jpg" alt="Implantología — Simetría Dental Studio" loading="lazy"></div>
+  <div class="spec-content"><h3>Implantología</h3><p>Recupera piezas perdidas con implantes permanentes.</p>
         <a href="#contacto">Conocer más <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+</div>
 
-      <div class="spec-card"><div class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg></div>
-        <h3>Cirugía Oral</h3><p>Extracciones y cirugías con seguridad y precisión.</p>
+      <div class="spec-card">
+  <div class="spec-photo"><img src="esp5.jpg" alt="Cirugía Oral — Simetría Dental Studio" loading="lazy"></div>
+  <div class="spec-content"><h3>Cirugía Oral</h3><p>Extracciones y cirugías con seguridad y precisión.</p>
         <a href="#contacto">Conocer más <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+</div>
 
-      <div class="spec-card"><div class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="4" width="14" height="16" rx="2"/><path d="M9 9h6M9 13h6"/></svg></div>
-        <h3>Rehabilitación Oral</h3><p>Restaura función y estética con coronas y prótesis.</p>
+      <div class="spec-card">
+  <div class="spec-photo"><img src="esp6.jpg" alt="Rehabilitación Oral — Simetría Dental Studio" loading="lazy"></div>
+  <div class="spec-content"><h3>Rehabilitación Oral</h3><p>Restaura función y estética con coronas y prótesis.</p>
         <a href="#contacto">Conocer más <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+</div>
 
-      <div class="spec-card"><div class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v6M9 6l3 3 3-3M6 21c0-5 3-8 6-8s6 3 6 8"/></svg></div>
-        <h3>Endodoncia</h3><p>Salva tu diente y elimina el dolor de raíz.</p>
+      <div class="spec-card">
+  <div class="spec-photo"><img src="esp7.jpg" alt="Endodoncia — Simetría Dental Studio" loading="lazy"></div>
+  <div class="spec-content"><h3>Endodoncia</h3><p>Salva tu diente y elimina el dolor de raíz.</p>
         <a href="#contacto">Conocer más <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+</div>
 
-      <div class="spec-card"><div class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3.5"/><path d="M5 12a7 7 0 0114 0M3 12a9 9 0 0118 0"/></svg></div>
-        <h3>ATM y Bruxismo</h3><p>Alivia el dolor mandibular y el apretamiento dental.</p>
+      <div class="spec-card">
+  <div class="spec-photo"><img src="esp8.jpg" alt="ATM y Bruxismo — Simetría Dental Studio" loading="lazy"></div>
+  <div class="spec-content"><h3>ATM y Bruxismo</h3><p>Alivia el dolor mandibular y el apretamiento dental.</p>
         <a href="#contacto">Conocer más <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+</div>
 
-      <div class="spec-card"><div class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M9 10h.01M15 10h.01M8 15c1.3 1 2.6 1.5 4 1.5s2.7-.5 4-1.5"/></svg></div>
-        <h3>Estética Facial</h3><p>Rejuvenece tu rostro con botox y vitaminas faciales.</p>
+      <div class="spec-card">
+  <div class="spec-photo"><img src="esp9.jpg" alt="Estética Facial — Simetría Dental Studio" loading="lazy"></div>
+  <div class="spec-content"><h3>Estética Facial</h3><p>Rejuvenece tu rostro con botox y vitaminas faciales.</p>
         <a href="#contacto">Conocer más <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+</div>
 
-      <div class="spec-card"><div class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C9 6 6 9 6 13a6 6 0 0012 0c0-4-3-7-6-11z"/></svg></div>
-        <h3>Bienestar Integral</h3><p>Acupuntura y terapias complementarias en consulta.</p>
+      <div class="spec-card">
+  <div class="spec-photo"><img src="esp10.jpg" alt="Bienestar Integral — Simetría Dental Studio" loading="lazy"></div>
+  <div class="spec-content"><h3>Bienestar Integral</h3><p>Acupuntura y terapias complementarias en consulta.</p>
         <a href="#contacto">Conocer más <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+</div>
     </div>
   </div>
 </section>
@@ -1153,6 +1223,28 @@ function intent(t){t=t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g
 function submit(){const t=inp.value.trim();if(!t)return;add(esc(t),'user');inp.value='';const a=intent(t);typing(()=>a?action(a):add('Puedo ayudarte con tratamientos, valores, horarios, ubicación o agendamiento. Si tu consulta es específica sobre tu salud, lo mejor es hablar directamente con el equipo clínico.','bot',[{text:'Ver especialidades',action:'especialidades'},{text:'Agendar evaluación',action:'agendar'},{text:'Hablar con la clínica',action:'contacto'}]))}
 function open(){chat.classList.add('open');if(!started){started=true;welcome()}setTimeout(()=>inp.focus(),250)}launch.onclick=()=>chat.classList.contains('open')?chat.classList.remove('open'):open();close.onclick=()=>chat.classList.remove('open');send.onclick=submit;inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();submit()}});document.querySelectorAll('.sim-quick').forEach(b=>b.onclick=()=>{open();add(b.textContent,'user');typing(()=>action(b.dataset.act))});
 })();
-</script>\n
+</script>
+
+
+<script>
+(function(){
+  const slides=[...document.querySelectorAll('.hero-slider-img')];
+  const dots=[...document.querySelectorAll('.hero-dot')];
+  const prev=document.getElementById('heroPrev');
+  const next=document.getElementById('heroNext');
+  if(!slides.length) return;
+  let current=0, timer;
+  function show(i){
+    current=(i+slides.length)%slides.length;
+    slides.forEach((el,n)=>el.classList.toggle('active',n===current));
+    dots.forEach((el,n)=>el.classList.toggle('active',n===current));
+  }
+  function restart(){clearInterval(timer);timer=setInterval(()=>show(current+1),5000);}
+  prev?.addEventListener('click',()=>{show(current-1);restart();});
+  next?.addEventListener('click',()=>{show(current+1);restart();});
+  dots.forEach((d,i)=>d.addEventListener('click',()=>{show(i);restart();}));
+  show(0);restart();
+})();
+</script>
 </body>
 </html>
