@@ -1,4 +1,4 @@
-name: Link specialty pages
+name: Fix specialty links
 
 on:
   push:
@@ -16,36 +16,33 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: main
-      - name: Update specialty links in index
+      - name: Fix links for GitHub Pages project site
         shell: python
         run: |
           from pathlib import Path
-          import re
 
           p = Path('index.html')
           text = p.read_text(encoding='utf-8')
 
-          # Make Especialidades in navigation/menu open the specialty hub.
-          text = text.replace('<a href="#especialidades">Especialidades</a>', '<a href="/especialidades/">Especialidades</a>')
-
-          routes = {
-              'Odontología General': '/odontologia-general/',
-              'Estética Dental': '/estetica-dental/',
-              'Ortodoncia y Ortopedia': '/ortodoncia-y-ortopedia/',
-              'Implantología': '/implantologia/',
-              'Cirugía Oral': '/cirugia-oral/',
-              'Rehabilitación Oral': '/rehabilitacion-oral/',
-              'Endodoncia': '/endodoncia/',
-              'ATM y Bruxismo': '/atm-y-bruxismo/',
-              'Estética Facial': '/estetica-facial/',
-              'Bienestar Integral': '/bienestar-integral/',
+          # GitHub Pages publishes this repo under /Simetria/.
+          # Root-absolute links such as /implantologia/ point outside the project,
+          # so use links relative to index.html instead.
+          replacements = {
+              'href="/especialidades/"': 'href="especialidades/"',
+              'href="/odontologia-general/"': 'href="odontologia-general/"',
+              'href="/estetica-dental/"': 'href="estetica-dental/"',
+              'href="/ortodoncia-y-ortopedia/"': 'href="ortodoncia-y-ortopedia/"',
+              'href="/implantologia/"': 'href="implantologia/"',
+              'href="/cirugia-oral/"': 'href="cirugia-oral/"',
+              'href="/rehabilitacion-oral/"': 'href="rehabilitacion-oral/"',
+              'href="/endodoncia/"': 'href="endodoncia/"',
+              'href="/atm-y-bruxismo/"': 'href="atm-y-bruxismo/"',
+              'href="/estetica-facial/"': 'href="estetica-facial/"',
+              'href="/bienestar-integral/"': 'href="bienestar-integral/"',
           }
 
-          for title, route in routes.items():
-              pattern = rf'(<h3>{re.escape(title)}</h3>.*?<a href=")#contacto("[^>]*>Conocer más)'
-              text, count = re.subn(pattern, rf'\1{route}\2', text, count=1, flags=re.S)
-              if count != 1:
-                  raise SystemExit(f'No pude actualizar el enlace de: {title}')
+          for old, new in replacements.items():
+              text = text.replace(old, new)
 
           p.write_text(text, encoding='utf-8')
 
@@ -55,5 +52,5 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html
           git diff --cached --quiet && exit 0
-          git commit -m "Link specialty cards and menu"
+          git commit -m "Fix specialty routes on GitHub Pages"
           git push origin main
